@@ -25,11 +25,7 @@ int main(int argc,char *argv[])//1to 2to 3to pool
 	}
 	printf("success!\n");
 	char buf[1024];
-	while(1)
-	{
-		memset(buf,0,1024);
-		strcpy(buf,"p1: ");
-		read(0,buf+4,1020);
+	while(memset(buf,0,1024),strcpy(buf,"p1: "),read(0,buf+4,1020)!=-1){
 		write(fdsend,buf,strlen(buf));
 	}
 	close(fdsend);
