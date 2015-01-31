@@ -1,0 +1,5 @@
+gcc host.c -o host
+gcc node.c -o 1
+gcc node.c -o 2 
+gcc node.c -o 3
+
