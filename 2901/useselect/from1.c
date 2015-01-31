@@ -7,23 +7,31 @@
 #include"1sel.h"
 int main(int argc,char *argv[])
 {
-	int fd21,fd31;
+	int fd21,fd31,fd3,fd5;
 	char buf[1024]="";
-	printf("try to open 1\n");
-	fd21=open("./1",O_RDONLY);
+	fd31=open(argv[1],O_RDONLY);
+	printf("2 open sucess!\n");
+	fd21=open(argv[2],O_RDONLY);
 	printf("1 open suceess\n");
-	fd31=open("./2",O_RDONLY);
-	printf("2 open sucess!");
+	fd3=open(argv[3],O_WRONLY);
+	fd5=open(argv[5],O_WRONLY);
 	while(1)
 	{
 		memset(buf,0,1024);
-		write(fd21,buf,strlen(buf));
+		read(fd31,buf,1024);
 		if(strcmp(buf,"")!=0)
 			printf("from 1: %s",buf);
 		memset(buf,0,1024);
-		write(fd31,buf,strlen(buf));
+		read(fd21,buf,1024);
 		if(strcmp(buf,"")!=0)
 			printf("from 2: %s",buf);
+		memset(buf,0,1024);
+		read(0,buf,1024);
+		write(fd3,buf,strlen(buf));
+	
+		memset(buf,0,1024);
+		read(0,buf,1024);
+		write(fd5,buf,strlen(buf));
 	}
 	printf("end of program.\n");
 	close(fd21);

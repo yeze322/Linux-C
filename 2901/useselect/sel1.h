@@ -21,12 +21,16 @@ void useselect(int a,int b,int c,int d)
 	char buf[1024];		
 	int  retu;
 	int flag=0;
+	
+	int my_stdin;
+
+	dup2(0,my_stdin);
 
 	fd_set read_sets;	
 fg:	FD_ZERO(&read_sets);//like memset
 	FD_SET(a,&read_sets);
 	FD_SET(b,&read_sets);
-	FD_SET(0,&read_sets);
+	FD_SET(my_stdin,&read_sets);
 	memset(buf,0,1024);
 	
 	retu=select(1024,&read_sets,NULL,NULL,NULL);//NULL means keep wait
@@ -54,7 +58,7 @@ printf("%d--%d\n",FD_ISSET(a,&read_sets),FD_ISSET(b,&read_sets));
 		if(FD_ISSET(0,&read_sets))
 		{
 			memset(buf,0,1024);
-			read(0,buf,1024);
+			read(my_stdin,buf,1024);
 			if(strcmp(buf,"")==0)
 			{
 				close(d);

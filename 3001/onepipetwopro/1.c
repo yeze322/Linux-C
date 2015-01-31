@@ -15,32 +15,44 @@
 #include<time.h>
 int main(int argc,char *argv[])
 {
-	printf("pro start__\n");
+	printf("pro start_%d_%s\n",argc,argv[1]);
 	int fdwr=open(argv[1],O_RDWR);
 	char buf[1024]="";
 	fd_set read_sets;
 	printf("connect suc!\n");
-ag:	FD_ZERO(&read_sets);
+	int retu;
+ag:
+	FD_ZERO(&read_sets);
 	FD_SET(0,&read_sets);
 	FD_SET(fdwr,&read_sets);
-	int retu=select(1024,&read_sets,NULL,NULL,NULL);
+	printf("pipe active? %d\n",FD_ISSET(fdwr,&read_sets));
+	retu=select(1024,&read_sets,NULL,NULL,NULL);
 	if(retu)
 	{
 		if(FD_ISSET(fdwr,&read_sets))
 		{
+			printf("pipe active !\n");
 			memset(buf,0,1024);
 			read(fdwr,buf,1024);
+			if(strcmp(buf,"EOF")==0)
+			{
+				close(fdwr);
+				exit(1);
+			}
 			printf("%s",buf);
 		}
 		if(FD_ISSET(0,&read_sets))
 		{
+			printf("input active \n");
 			memset(buf,0,1024);//input is active, pipe should be write
-			if(read(0,buf,1024)!=0)
-				write(fdwr,buf,strlen(buf));
-			else{
+			read(0,buf,1024);
+			write(fdwr,buf,strlen(buf));
+			if(strcmp(buf,"")==0){
+				write(fdwr,"EOF",5);
 				close(fdwr);
 				exit(1);
 			}
+			fflush(stdin);
 		}
 		sleep(1);
 	}

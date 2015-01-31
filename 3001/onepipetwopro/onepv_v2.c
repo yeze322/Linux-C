@@ -20,10 +20,10 @@ int main(int argc,char *argv[])
 	char buf[1024]="";
 	fd_set read_sets;
 	printf("connect suc!\n");
-ag:	FD_ZERO(&read_sets);
+	FD_ZERO(&read_sets);
 	FD_SET(0,&read_sets);
 	FD_SET(fdwr,&read_sets);
-	int retu=select(1024,&read_sets,NULL,NULL,NULL);
+ag: retu=select(1024,&read_sets,NULL,NULL,NULL);
 	if(retu)
 	{
 		if(FD_ISSET(fdwr,&read_sets))

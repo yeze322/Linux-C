@@ -1,0 +1,3 @@
+this program uses pthread to display users' input in 
+the file 'pool'. 
+this is one way to exchange information between progresses.

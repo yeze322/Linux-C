@@ -4,12 +4,12 @@
   > Mail:2295905420@qq.com 
   > Created Time: Thu 29 Jan 2015 08:51:09 UTC
  ************************************************************************/
-#include "3sel.h"
+#include "sel0.h"
 int main(int argc,char *argv[])
 {
 	int fd23,fd31,fd32,fd13;
 
-//	fd13=open(argv[2],O_RDONLY);
+	fd13=open(argv[2],O_RDONLY);
 	printf("3 from 1 ok\n");
 	fd23=open(argv[4],O_RDONLY);
 	printf("2 to 3 ok\n");
@@ -18,7 +18,14 @@ int main(int argc,char *argv[])
 	fd32=open(argv[6],O_WRONLY);
 	printf("2 from 3 ok\n");
 	printf("connect success!\n");
-	useselect(fd23,fd31,fd32,fd13);
+	char buf[1024]="";
+/*	while(1)
+	{
+		memset(buf,0,1024);
+		read(fd13,buf,1024);
+		printf("%S",buf);
+	}*/
+	useselect(fd13,fd23,fd31,fd32);
 	close(fd23);
 	close(fd31);
 	close(fd32);
