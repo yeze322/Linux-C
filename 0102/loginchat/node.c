@@ -17,9 +17,18 @@ int main(int argc,char *argv[])
 {
 	printf("pro start_%d_%s\n",argc,argv[1]);
 	int fdwr=open(argv[1],O_RDWR);
+	int login=open("./login",O_WRONLY);
+	if(login==-1){
+		perror("no login，makesure .//login exsist\n");
+		exit(1);
+	}
 	char buf[1024]="";
 	fd_set read_sets;
 	printf("connect suc!\n");
+/*	char loginkey[100]="I'm on";
+	write(fdwr,loginkey,strlen(loginkey));*/
+	write(login,argv[1],strlen(argv[1]));
+//	close(login);
 	int retu;
 ag:
 	FD_ZERO(&read_sets);
@@ -34,6 +43,7 @@ ag:
 			read(fdwr,buf,1024);
 			if(strcmp(buf,"EOF")==0)
 			{
+				printf("host poweroff!\n");
 				close(fdwr);
 				exit(1);
 			}

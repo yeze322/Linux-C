@@ -25,11 +25,13 @@ ag:
 	FD_ZERO(&read_sets);
 	FD_SET(0,&read_sets);
 	FD_SET(fdwr,&read_sets);
+	printf("wait...\n");
 	retu=select(1024,&read_sets,NULL,NULL,NULL);
 	if(retu)
 	{
 		if(FD_ISSET(fdwr,&read_sets))
 		{
+			printf("pipe active !\n");
 			memset(buf,0,1024);
 			read(fdwr,buf,1024);
 			if(strcmp(buf,"EOF")==0)
@@ -41,6 +43,7 @@ ag:
 		}
 		if(FD_ISSET(0,&read_sets))
 		{
+			printf("input active \n");
 			memset(buf,0,1024);//input is active, pipe should be write
 			read(0,buf,1024);
 			write(fdwr,buf,strlen(buf));

@@ -14,37 +14,46 @@
 #include<string.h>
 #include<sys/select.h>
 #include<sys/time.h>
+#define N 100
 void waitfornode(int *fd,int n,fd_set);
 void writenfifo(char buf[],int n,int *fd,int i,fd_set *);
 int main(int argc,char *argv[])//用argc来创建一个数组
 {
-	printf("pro start_%d_\n",argc);
-	int fd[argc],i;
+	int fd[N]={0},i;
 	char *exitbuf="EOF";
+	int login=open("./login",O_RDONLY);
+	if(login==-1){
+		perror("no login file,makesure .//login exsist\n");
+		exit(1);
+	}
+	/*
 	for(i=1;i<argc;i++)
 	{
 		printf("add pipe[%d]\n",i);
 		fd[i]=open(argv[i],O_RDWR);
-	}
+	}*/
 	char buf[1024]="";
+	char loginkey[15]="I'm on";
 	fd_set read_sets,examactive;
 	struct timeval st;
 	st.tv_sec=0;
 	st.tv_usec=100;//100ms wait
+	int active=0;
 	int retu;//exitflag---退出常数，累积到一定值就会触发服务器的终止。//先不添加这个功能吧
 ag:
 	FD_ZERO(&read_sets);
-//	FD_ZERO(&examactive);
+	//	FD_ZERO(&examactive);
 	FD_SET(0,&read_sets);
-	for(i=1;i<argc;i++){
+	FD_SET(login,&read_sets);
+	for(i=1;i<=active;i++){
 		FD_SET(fd[i],&read_sets);
-//		FD_SET(fd[i],&examactive);
+		//		FD_SET(fd[i],&examactive);
 	}
 	retu=select(1024,&read_sets,NULL,NULL,NULL);
 	//new set to examine all the pipes, i think sleep is more useable than this
 	if(retu)
 	{
-		for(i=1;i<argc;i++)
+		for(i=1;i<=active;i++)
 		{
 			printf("detect all node...\n");
 			if(FD_ISSET(fd[i],&read_sets))
@@ -54,37 +63,49 @@ ag:
 				read(fd[i],buf,1024);
 				if(strcmp(buf,"EOF")==0){
 					close(fd[i]);
-					fd[i]=0;
-					printf("terminal[%d] is close...\n",i);
+					active--;
+					printf("terminal[%d] is off line...\n",i);
 				}else{
 					printf("start write...\n");
-					char said[1024];
-					strcpy(said,argv[i]);
-					strcat(said,": ");
-					strcat(said,buf);
-					writenfifo(said,argc-1,fd,i,&read_sets);
+					writenfifo(buf,active,fd,i,&read_sets);
 					printf("[%d],%s",i,buf);
+					//	FD_CLR(fd[i],&examactive);
 				}
-			//	FD_CLR(fd[i],&examactive);
 				break;
 			}//去掉break，因为会并发的情况.但是先不考虑这个吧
 		}
-	//	while(select(1024,&examactive,NULL,NULL,&st));
+		//	while(select(1024,&examactive,NULL,NULL,&st));
 		if(FD_ISSET(0,&read_sets))
 		{
 			printf("input active \n");
 			memset(buf,0,1024);//input is active, pipe should be write
 			read(0,buf,1024);
 			if(strcmp(buf,"")==0){
-				writenfifo(exitbuf,argc-1,fd,0,&read_sets);
+				writenfifo(exitbuf,active,fd,0,&read_sets);
 				exit(1);
 			}
-			writenfifo(buf,argc-1,fd,0,&read_sets);
-		//	while(select(1024,&examactive,NULL,NULL,&st));
+			writenfifo(buf,active,fd,0,&read_sets);
+			//	while(select(1024,&examactive,NULL,NULL,&st));
+		}
+		if(FD_ISSET(login,&read_sets))
+		{//some user is online
+			printf("login is active,");
+			char user[100]="";
+			read(login,user,100);
+			printf("username :		%s\n",user);
+			//want to use queue to save those logins
+			for(i=1;i<=N;i++){
+				if(fd[i]==0){
+					active++;
+					break;
+				}
+			}
+			fd[i]=open(user,O_RDWR);
+			printf("fd[%d],[%s] is online...",i,user);
 		}
 
 		//	printf("sleep is active...\n");
-			usleep(10000);
+		usleep(10000);
 
 	}
 	goto ag;
@@ -120,7 +141,7 @@ void writenfifo(char buf[],int n,int *fd,int except,fd_set *read_sets)
 			continue;
 		printf("------------loop %d act?%d\n",i,FD_ISSET(fd[i],read_sets));
 		write(fd[i],buf,strlen(buf));
-//		FD_CLR(fd[i],read_sets);
+		//		FD_CLR(fd[i],read_sets);
 		//写完后从本次周期删除是个好习惯啊，不然会一直活动的再加上1阻塞那就更阻塞了
 	}
 }
