@@ -53,13 +53,17 @@ ag:
 		{
 			memset(buf,0,1024);//input is active, pipe should be write
 			read(0,buf,1024);
-			write(fdwr,buf,strlen(buf));
 			if(strcmp(buf,"")==0){
 				write(fdwr,"EOF\0",4);
 				close(fdwr);
 				exit(1);
 			}
 		//	fflush(stdin);
+			char sendbuf[1024];
+			strcpy(sendbuf,argv[1]);
+			strcat(sendbuf,": ");
+			strcat(sendbuf,buf);
+			write(fdwr,sendbuf,strlen(sendbuf));
 			printf("			zzzzzz\n");
 			usleep(10000);//改变位置，优化延迟
 		}

@@ -55,7 +55,7 @@ ag:
 	{
 		for(i=1;i<=active;i++)
 		{
-			printf("detect all node...\n");
+			printf("detect all node...%d\n",active);
 			if(FD_ISSET(fd[i],&read_sets))
 			{
 				printf("find the active one [%d]\n",i);
@@ -63,6 +63,13 @@ ag:
 				read(fd[i],buf,1024);
 				if(strcmp(buf,"EOF")==0){
 					close(fd[i]);
+					fd[i]=0;//用链表比较好
+					int writ=1;
+					for(i=1;i<=active;i++)
+					{
+						if(fd[i]!=0)
+							fd[writ++]=fd[i];
+					}
 					active--;
 					printf("terminal[%d] is off line...\n",i);
 				}else{
@@ -89,10 +96,12 @@ ag:
 		}
 		if(FD_ISSET(login,&read_sets))
 		{//some user is online
-			printf("login is active,");
 			char user[100]="";
 			read(login,user,100);
-			printf("username :		%s\n",user);
+			if(strcmp(user,"")==0)
+				goto ag;
+			printf("login is active,");
+			printf("username :[%s]\n",user);
 			//want to use queue to save those logins
 			for(i=1;i<=N;i++){
 				if(fd[i]==0){
