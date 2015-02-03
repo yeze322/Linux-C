@@ -1,0 +1,2 @@
+gcc terminal.c -I ./ -o 1
+cp 1 2

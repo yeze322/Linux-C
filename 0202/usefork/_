@@ -1,0 +1,52 @@
+/*************************************************************************
+	> File Name: chat.h
+	> Author: YeZe
+	> Mail:2295905420@qq.com 
+	> Created Time: Mon 02 Feb 2015 15:13:40 UTC
+ ************************************************************************/
+
+//#include<iostream>
+//using namespace std;
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<fcntl.h>
+#include<sys/stat.h>
+#include<string.h>
+void child(int fdread)
+{
+	printf("child activate\n");
+	char buf[1024];
+	while(1)
+	{
+		memset(buf,0,1024);
+		read(fdread,buf,1024);
+		if(strcmp(buf,"EOF")==0)
+		{
+			printf("chile end\n");
+			close(fdread);
+			exit(0);
+		}
+		if(strcmp(buf,"")!=0)
+			printf("from: %s");
+	}
+}
+void parent(int fdwrite)
+{
+	printf("parent activate\n");
+	char buf[1024];
+	while(1)
+	{
+		memset(buf,0,1024);
+		if(read(0,buf,1024)==0){
+			printf("end of file!\n");
+			write(fdwrite,"EOF",strlen(buf));
+			close(fdwrite);
+			exit(0);
+		}
+		printf("read success\n");
+		write(fdwrite,buf,strlen(buf));
+	}
+}

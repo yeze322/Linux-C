@@ -60,9 +60,10 @@ ag:
 			}
 		//	fflush(stdin);
 			char sendbuf[1024];
-			strcpy(sendbuf,argv[1]);
+		/*	strcpy(sendbuf,argv[1]);
 			strcat(sendbuf,": ");
-			strcat(sendbuf,buf);
+			strcat(sendbuf,buf);*/
+			sprintf(sendbuf,"%s: %s",argv[1],buf);
 			write(fdwr,sendbuf,strlen(sendbuf));
 			printf("			zzzzzz\n");
 			usleep(10000);//改变位置，优化延迟
