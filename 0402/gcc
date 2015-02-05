@@ -1,0 +1,2 @@
+gcc host.c -o server
+gcc user.c -o user1
