@@ -1,0 +1,3 @@
+gcc -g ./whyfork.c -o server
+gcc -g ./user.c -o 1
+cp 1 2

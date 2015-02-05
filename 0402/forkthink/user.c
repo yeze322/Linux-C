@@ -30,7 +30,9 @@ int main(int argc, char *argv[])//send in user's name
     //send login signal to server
     mkfifo(name,0666);
     int send=open(PUBLIC,O_WRONLY);//name.send.fifo
-    int recv=open(name,O_RDONLY);//name.recv.fifo
+    printf("pubilc pipe open success,name = %s\n", name );
+    int recv=open(name,O_RDWR);//name.recv.fifo
+    printf("recv pipe open succes\n");
     //create two fifo used for reading and writing
     char buf[1024];
     char message[1024];
@@ -49,7 +51,7 @@ int main(int argc, char *argv[])//send in user's name
             printf("input activate buf = %s\n",buf);
             if(strcmp(buf,"")==0)//means ctrl+D
             {
-                write(send,"EOF\0",4);
+                write(send,argv[1],strlen(argv[1]));
                 exit(1);
             }
             sprintf(message,"%s: %s",argv[1],buf);
@@ -61,8 +63,10 @@ int main(int argc, char *argv[])//send in user's name
         while(1)
         {
             read(recv,buf,1024);
-            if(strcmp(buf,"EOF")==0)
+            if(strcmp(buf,"EOF")==0){
+                wait(NULL);
                 exit(0);
+            }
             printf("%s\n",buf);
         }//try to exit child when parent exit
     }
