@@ -67,15 +67,15 @@ void* deliver(void *arg)
         for(i=0;i<thread_num;i++)
         {
             char *buf = (char *)calloc(128,sizeof(char));
-            printf("d.1\n");
             read(0,buf,127);
+            printf("this task will be given to [%d]\n",i);
             int j;
             for(j=0;j<QSIZE;j++)
             {
                 if(myt.task[i][j]==NULL)
                 {
                     myt.task[i][j] = buf;
-                    printf("push it %s\n",myt.task[i][j]);
+                    printf("push it in [%d] %s\n",j,myt.task[i][j]);
                     break;
                 }
 
