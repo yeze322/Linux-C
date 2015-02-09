@@ -1,0 +1,4 @@
+udo apt-get install manpages-dev
+sudo apt-get install manpages-posix
+sudo apt-get install manpages-posix-dev
+sudo apt-get install libstdc++-doc
