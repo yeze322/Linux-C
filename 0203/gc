@@ -1,0 +1,2 @@
+gcc ./cserver.c -g -o server
+gcc ./cclient.c -g -o ../client
