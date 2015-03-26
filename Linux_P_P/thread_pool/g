@@ -1,0 +1,2 @@
+g++ -g ./src/*.cpp -o ./main -lpthread -I ./include/
+./main
