@@ -1,0 +1,2 @@
+gcc ./basic_use.cpp -o _basic_use -lpthread
+./_basic_use
