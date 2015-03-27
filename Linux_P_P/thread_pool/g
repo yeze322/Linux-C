@@ -1,2 +1,4 @@
-g++ -g ./src/*.cpp -o ./main -lpthread -I ./include/
+g++ -g -pg  ./src/*.cpp -o ./main -lpthread -I ./include/
 ./main
+#gprof ./main
+#gprof ./main | gprof2dot.py | dot -Tpng -o output.png

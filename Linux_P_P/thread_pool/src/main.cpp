@@ -1,35 +1,37 @@
 #include "Thread.h"
 #include "common.h"
 #include "Mutex.h"
+#include "Barrier.h"
+#include "MutexLock.h"
 /* =================================== */
-
 thread_FUNC printid;
-
+//pthread_barrier_t wall;
+pthread_mutex_t num_lock;
 struct NUM{
 	int num;
-	Mutex num_lock;
+	//Mutex num_lock;
 };
 
 void* addnum(void * arg){
 	p("add num start!");
 	NUM* a = (NUM *)arg;
-	for(int i = 0;i<10000;i++){
-		a->num_lock.lock();
+	for(int i = 0;i<9999999;i++){
+		MutexLock temp(num_lock);
+		//a->num_lock.lock();
 		a->num  = a->num + 1;
-		a->num_lock.unlock();
-	}	
+		//a->num_lock.unlock();
+	}
 	printf("a = %d\n",a->num);
-	sleep(1);
+	printf("tid = %lu, finish!\n",pthread_self());
+	//sleep(1);
 }
 
 int main()
 {
 	NUM a;
 	a.num = 0;
-
 	Thread t1(addnum,&a);
 	Thread t2(addnum,&a);
-
 	t1.create();
 	t2.create();
 	t1.join();
@@ -57,4 +59,14 @@ int main(int argc,char *argv[])
     printf("retval = %s\n",(char*)&retval);
     return 0;
 }
+
+Barrier wall(2);
+
+	wall.wait();
+
+	wall.wait();
+
+	p("wait wall");
+
+	//wall.wait();
 */

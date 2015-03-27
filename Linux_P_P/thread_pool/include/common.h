@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <assert.h>
+#include <vector>
+
 typedef void* (*p_thread_FUNC)(void *);
 typedef void* thread_FUNC(void*);
 
