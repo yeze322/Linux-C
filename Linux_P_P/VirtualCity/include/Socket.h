@@ -1,11 +1,11 @@
+#ifndef _SOCKET_H_
+#define _SOCKET_H_
+
 #include "common.h"
 #include "Thread.h"
-#include "MutexLock.h"
-#include "ThreadPool.h"
+#include "Mutex.h"
 #define PERROR(judge,word) if(judge == -1) { perror(word);exit(1);}
 
-using std::queue;
-using std::vector;
 class Socket_Connect
 {
 public:
@@ -20,7 +20,7 @@ private:
 	int BACK_LOG;
 	struct sockaddr_in servaddr;
 	void init_sockaddr_in(sockaddr_in*,int,const char*);
-	pthread_mutex_t lock_accept;
+	Mutex lock_accept;
 };
 
 Socket_Connect::Socket_Connect (int SER_PORT = 1234, const char *SER_IP = "192.168.1.97" )
@@ -47,8 +47,9 @@ int  Socket_Connect::Accept( )
 {
 	struct sockaddr_in cliaddr;
 	socklen_t size_clientaddr = sizeof(cliaddr);
-	MutexLock lock(lock_accept);
+	lock_accept.lock();
 	int fd_client = accept(sock_fd,(struct sockaddr*)&cliaddr,&size_clientaddr);
+	lock_accept.unlock();
 	printf("[%d] %s:%d connet!\n",fd_client,inet_ntoa(cliaddr.sin_addr),ntohs(cliaddr.sin_port));
 	return fd_client;
 }
@@ -66,13 +67,5 @@ void Socket_Connect::init_sockaddr_in(sockaddr_in *seraddr,int SER_PORT,const ch
     seraddr->sin_addr.s_addr = inet_addr(SER_IP);
 }
 
-
-Socket_Connect server;
-
-int main()
-{
-	ThreadPool pool;
-	server.PowerOn();
-	server.Accept();
-	return 0;
-}
+#endif
+//_SOCKET_H_

@@ -3,28 +3,33 @@
 
 #include "common.h"
 #include "Mutex.h"
+
 class SOURCE
 {
 public:
-	void init(const char*,unsigned int, unsigned int);
+	void init(const char*,unsigned int, unsigned int,void*);
 	inline void increase();
 	inline int decrease(unsigned int);
 	unsigned int get_sleeptime() {return sleep_time;}
 	unsigned int get_amount() {return source_amount;}
+	unsigned int get_speed() {return source_speed; }
+	char* get_name() { return name; }
 	Mutex source_lock;
+	void* base_class;
 private:
+	char name[20];
 	unsigned int source_amount;
 	unsigned int sleep_time;
 	unsigned int source_speed;
-	char name[20];
 };
 
-void SOURCE::init(const char* strname,unsigned int increase_speed, unsigned int sleeptime)
+void SOURCE::init(const char* strname,unsigned int increase_speed, unsigned int sleeptime,void *base)
 {
 	source_amount = 0;
 	source_speed = increase_speed;
 	sleep_time = sleeptime;
 	strcpy(name,strname);
+	base_class = base;
 }
 
 void SOURCE::increase()
@@ -32,8 +37,6 @@ void SOURCE::increase()
 	source_lock.lock();
 	source_amount += source_speed;
 	source_lock.unlock();
-
-	printf("[%s] increase %u\n",name,source_speed);
 }
 
 int SOURCE::decrease(unsigned int num)
