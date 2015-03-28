@@ -1,3 +1,5 @@
+#ifndef _BARRIER_H_
+#define _BARRIER_H_
 #include "common.h"
 /* this class is meaningless! */
 class Barrier
@@ -32,3 +34,4 @@ void Barrier::wait()
 	if(ret) perror("Barrier::wait");
 	printf("wall : %d\n",ret);
 }
+#endif

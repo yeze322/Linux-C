@@ -1,3 +1,5 @@
+#ifndef _MUTEX_H_
+#define _MUTEX_H_
 #include "common.h"
 class Mutex{
 public:
@@ -28,3 +30,4 @@ Mutex::~Mutex(){
 pthread_mutex_t* Mutex::get_pMutex(){ //seems no use
     return mutex;
 }
+#endif

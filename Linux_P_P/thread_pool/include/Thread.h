@@ -1,5 +1,14 @@
+#ifndef _THREAD_H_
+#define _THREAD_H_
 #include "common.h"
 /* ============================ */
+
+void p(const char *str){
+    printf("%s\n",str);
+}
+typedef void* (*p_thread_FUNC)(void *);
+typedef void* thread_FUNC(void*);
+
 class Thread
 {
 public:
@@ -56,6 +65,7 @@ void Thread::cancel(){
 
 void Thread::kill(pthread_t tid_cancel){
     int err = pthread_cancel(tid_cancel);
-    if(err) p("in Thread::cancel, cancel failed!\n");
+    if(err) p("in Thread::cancel, cancel failed!");
     else printf("kill thread %lu success!",tid_cancel);
 }
+#endif

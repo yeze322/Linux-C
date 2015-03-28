@@ -8,10 +8,10 @@
 #include <string.h>
 #include <assert.h>
 #include <vector>
-
-typedef void* (*p_thread_FUNC)(void *);
-typedef void* thread_FUNC(void*);
-
-void p(const char *);
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <queue>
 
 #endif //_COMMON_H_
