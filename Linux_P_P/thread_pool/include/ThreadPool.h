@@ -29,7 +29,6 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::init(Thread& )
 {
-	pool = new queue<Thread>(10,Thread);
 }
 
 
