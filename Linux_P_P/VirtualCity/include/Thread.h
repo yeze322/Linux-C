@@ -8,13 +8,14 @@ void p(const char *str){
 }
 typedef void* (*p_thread_FUNC)(void *);
 typedef void* thread_FUNC(void*);
+#define DETACHED 1
 
 class Thread
 {
 public:
     Thread(p_thread_FUNC func,void *arg) ;
     //~Thread();
-    pthread_t create();
+    pthread_t create(bool);
     void join(void*,size_t);
     size_t gettid(){return tid;}
     void kill(pthread_t);
@@ -34,12 +35,15 @@ Thread::Thread(p_thread_FUNC func, void *arg = NULL)
     this->func = func;
 }
 
-pthread_t Thread::create()
+pthread_t Thread::create(bool if_detached = false)
 {
     //p("creating thread!!");
     int err = pthread_create(&tid,NULL,func,arg);
     if (err){
         perror("create thread failed!\n");
+    }
+    if(if_detached){
+        pthread_detach(tid);
     }
     return tid;
 }
@@ -53,8 +57,10 @@ void Thread::join(void* retval = NULL,size_t datasize = 0)
     if (error){
         printf("join thread failed! tip = %lu\n",pthread_self());
     }
-    if(datasize)
-        strncpy((char*)retval,(char*)&ret,datasize);
+    else{
+        if(datasize)
+            strncpy((char*)retval,(char*)&ret,datasize);
+    }
     return;
 }
 void Thread::cancel(){

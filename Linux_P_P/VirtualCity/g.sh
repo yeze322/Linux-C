@@ -1,3 +1,3 @@
 #!/bin/bash
-g++ -g ./*.cpp -lpthread -o run -I ./include/
+g++ -g ./thread_pool_version.cpp -lpthread -o run -I ./include/
 ./run
