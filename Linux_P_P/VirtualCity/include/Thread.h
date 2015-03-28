@@ -29,14 +29,14 @@ private:
 
 Thread::Thread(p_thread_FUNC func, void *arg = NULL)
 {
-    p("Thread initailizing!");
+    //p("Thread initailizing!");
     this->arg = arg;
     this->func = func;
 }
 
 pthread_t Thread::create()
 {
-    p("creating thread!!");
+    //p("creating thread!!");
     int err = pthread_create(&tid,NULL,func,arg);
     if (err){
         perror("create thread failed!\n");
@@ -49,7 +49,7 @@ void Thread::join(void* retval = NULL,size_t datasize = 0)
     assert(retval!=NULL||datasize==0);
     void* ret;
     int error = pthread_join(tid,&ret);
-    p("join thread!\n");
+    //p("join thread!\n");
     if (error){
         printf("join thread failed! tip = %lu\n",pthread_self());
     }

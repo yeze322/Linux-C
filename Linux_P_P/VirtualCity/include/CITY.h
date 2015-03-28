@@ -17,9 +17,8 @@ public:
 	static thread_FUNC f_productor;
 	void run();
 	 int commuicate_fd;
-private:
-	 Mutex city_lock;
 	 Mutex fd_lock;
+	 Mutex city_lock;
 };
 
 CITY::CITY(int fd = 1)
@@ -63,7 +62,9 @@ void* CITY::f_reporter(void* arg)
 		waternum = (city->water).get_amount();
 		memset(info,100,sizeof(char));
 		sprintf(info,"REPORT: [sand = %u|wood = %u|water = %u]\n",sandnum,woodnum,waternum);
+		city->fd_lock.lock();
 		write(com_fd,info,strlen(info)+1);
+		city->fd_lock.unlock();
 		sleep(report_freq);
 	}
 }

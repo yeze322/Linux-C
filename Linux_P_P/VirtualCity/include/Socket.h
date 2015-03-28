@@ -31,6 +31,9 @@ Socket_Connect::Socket_Connect (int SER_PORT = 1234, const char *SER_IP = "192.1
 	sock_fd = socket(AF_INET,SOCK_STREAM,0);
 	PERROR(sock_fd,"socket function failed!");
 	init_sockaddr_in(&servaddr,SER_PORT,SER_IP);
+	/* set the test mode */
+	int on = 1;
+	setsockopt(sock_fd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
 }
 
 void Socket_Connect::PowerOn()
