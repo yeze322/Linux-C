@@ -1,7 +1,7 @@
 /*****
   > File Name: input.c
   > Author: YeZe
-  > Mail:2295905420@qq.com 
+  > Mail:a@b.com 
   > Created Time: Sun 01 Feb 2015 09:25:17 UTC
  ************************************************************************/
 
